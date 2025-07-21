@@ -1,0 +1,2912 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+
+<head>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link crossorigin="anonymous" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+    referrerpolicy="no-referrer" rel="stylesheet" />
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Магазин</title>
+  <style>
+    :root {
+      --header-heading-font: 'Open Sans', sans-serif;
+      --header-body-font: 'Open Sans', sans-serif;
+      --header-base-text-size: 16px;
+      --header-base-weight: 400;
+      --header-heading-weight: 700;
+    }
+
+    .license-card h3 {
+      font-size: 1.5rem;
+    }
+
+    .license-card .price {
+      font-family: var(--header-heading-font);
+      font-weight: var(--header-heading-weight);
+    }
+
+    .buy-button {
+      font-family: var(--header-body-font);
+      font-weight: var(--header-heading-weight);
+    }
+
+    .features li,
+    .features span {
+      font-size: calc(0.9rem + 3px) !important;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease;
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      font-size: 16px;
+      color: #212529;
+      line-height: 1.6;
+      background-color: #6caef0;
+      transition: background-color 0.4s ease, color 0.4s ease;
+    }
+
+    .license-card,
+    .tab-button,
+    input,
+    select,
+    textarea,
+    button {
+      transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .license-tabs {
+      display: flex;
+      justify-content: center;
+      background-color: #f1f1f1;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+    }
+
+    .tab-button {
+      background-color: inherit;
+      border: none;
+      border-right: 1px solid #ddd; /* Added separator */
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+      font-size: 17px;
+      font-weight: 500;
+      color: #555;
+      border-bottom: 3px solid transparent;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .license-tabs .tab-button:last-child {
+        border-right: none; /* Remove separator from last tab */
+    }
+
+    .tab-button:hover {
+      background-color: #ddd;
+    }
+
+    .tab-button.active {
+      background-color: #fff;
+      color: #007BFF;
+      border-bottom: 3px solid #007BFF;
+    }
+
+    .license-tab-content {
+      display: none;
+      padding: 2rem;
+      animation: fadeIn 0.5s;
+    }
+
+    .license-tab-content.active {
+      display: block;
+    }
+
+    #bitrix24-licenses.license-tab-content {
+      padding: 1rem;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .price-switch-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    #bitrix24-licenses .license-card .features {
+      height: 140px;
+    }
+
+    .price-switch-label {
+      font-weight: 500;
+      margin: 0 10px;
+    }
+
+    .price-switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+
+    .price-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: white;
+      transition: .4s, transform .4s;
+      border-radius: 50%;
+    }
+
+    input:checked+.slider {
+      background-color: #2196F3;
+    }
+
+    input:checked+.slider:before {
+      transform: translateX(26px) translateY(-50%);
+    }
+
+    .discount-badge {
+      background-color: #28a745;
+      color: white;
+      padding: 3px 6px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      margin-left: 5px;
+    }
+
+    .license-cards-container-wrapper {
+      position: relative;
+      padding: 0 40px;
+      overflow: hidden;
+    }
+
+    .license-cards-container {
+      display: flex;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      gap: 1.5rem;
+      padding: 1rem 5px;
+      justify-content: center;
+    }
+
+
+    .license-card {
+      flex: 0 0 320px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      transition: box-shadow 0.3s, transform 0.3s;
+      background-color: #fff;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .license-card:hover {
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      transform: translateY(-5px);
+    }
+
+    .card-header,
+    .card-body,
+    .card-footer {
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .card-header {
+      border-bottom: 1px solid #eee;
+      min-height: 157px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .card-header > h3 {
+      height: 60px;
+    } 
+    .card-header > p {
+      height: 20px;
+    } 
+    .card-body {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 180px;
+      text-align: center;
+    }
+
+    .card-footer {
+      border-top: 1px solid #eee;
+      background-color: #fafafa;
+      border-radius: 15px;
+      margin-bottom: 10px;
+    }
+
+    .license-card h3 {
+      font-size: 1.6rem;
+      margin-bottom: 0.5rem;
+      font-weight: 700;
+    }
+
+    .license-card .card-subtitle {
+      color: #777;
+      margin-top: 1.8rem;
+      margin-bottom: 1rem;
+      height: 50px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-weight: 400;
+    }
+
+    .license-card .price-container {
+      margin-bottom: 1rem;
+      height: 100px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .license-card .price {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #007BFF;
+      display: block;
+    }
+
+    .license-card .price .period {
+      font-size: 1rem;
+      font-weight: 400;
+      color: #555;
+    }
+
+    .license-card .old-price {
+      text-decoration: line-through;
+      color: #999;
+      font-size: 1.1rem;
+      display: block;
+      min-height: 1.3em;
+      font-weight: 400;
+    }
+
+    .license-card .user-count,
+    .user-select-dropdown {
+      font-weight: 500;
+      margin-bottom: 1rem;
+      min-height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .user-select-dropdown {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      background-color: #f9f9f9;
+      font-size: 1rem;
+      font-weight: 400;
+      cursor: pointer;
+    }
+
+    .license-card .buy-button {
+      background: linear-gradient(45deg, #00AFFF, #007BFF);
+      color: white !important;
+      padding: 15px 18px;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 12px;
+      line-height: 1.3;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+      display: inline-block;
+      margin-bottom: 1rem;
+      box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+      text-align: center;
+    }
+
+    .license-card .buy-button:hover {
+      background: linear-gradient(45deg, #007BFF, #00AFFF);
+      box-shadow: 0 6px 20px rgba(0, 123, 255, 0.5);
+    }
+
+    .storage-info {
+      font-weight: 500;
+      margin-bottom: 1rem;
+      color: #555;
+    }
+
+    .license-card .features {
+      list-style: none;
+      padding: 0 10px;
+      margin: 0;
+      text-align: left;
+      color: #555;
+      height: 190px;
+      overflow-y: auto;
+      font-weight: 400;
+      /* For Firefox */
+      scrollbar-width: thin;
+      scrollbar-color: #c1c1c1 #f1f1f1;
+    }
+
+    .license-card .features::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .license-card .features::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+
+    .license-card .features::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 4px;
+    }
+
+    .license-card .features::-webkit-scrollbar-thumb:hover {
+      background: #a8a8a8;
+    }
+
+    #bitrix24-licenses .license-card .features {
+      height: 140px;
+    }
+
+    .license-card .features li {
+      margin-bottom: 0.75rem;
+      padding-left: 0.5rem;
+      position: relative;
+      font-weight: 400;
+    }
+
+    .scroll-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(255, 255, 255, 0.9);
+      border: 1px solid #ddd;
+      border-radius: 50%;
+      width: 45px;
+      height: 45px;
+      cursor: pointer;
+      z-index: 10;
+      font-size: 28px;
+      line-height: 42px;
+      text-align: center;
+      color: #333;
+      transition: background-color 0.2s, box-shadow 0.2s;
+    }
+
+    .scroll-arrow:hover {
+      background-color: #fff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .scroll-arrow.prev {
+      left: 0;
+    }
+
+    .scroll-arrow.next {
+      right: 0;
+    }
+
+    .scroll-arrow:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    .license-tabs::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .license-tabs::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    .license-tabs::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 10px;
+    }
+
+    .license-tabs::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+    }
+
+    .license-tabs-wrapper {
+      width: 100%;
+      background-color: #f1f1f1;
+    }
+
+    .license-tabs-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 5px 60px;
+    }
+
+    .license-tabs {
+      flex: 1;
+      min-width: 0;
+      overflow-x: auto;
+      white-space: nowrap;
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+    }
+
+    .license-tabs::-webkit-scrollbar {
+      display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
+    }
+
+    .license-tabs-wrapper .scroll-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      font-size: 24px;
+      line-height: 38px;
+      text-align: center;
+      color: #333;
+      transition: background-color 0.2s;
+      z-index: 1;
+    }
+
+    .license-tabs-wrapper .scroll-arrow.prev {
+      left: 10px;
+    }
+
+    .license-tabs-wrapper .scroll-arrow.next {
+      right: 10px;
+    }
+
+    .license-tabs-wrapper .scroll-arrow:hover {
+      background-color: #f0f0f0;
+    }
+
+    .license-card .card-subtitle,
+    .license-card .features li span,
+    .license-card .features li {
+      font-size: 16px;
+      font-weight: 400;
+      color: #555;
+    }
+  </style>
+
+
+  <style>
+    .license-card .card-subtitle,
+    .license-card .features li span,
+    .license-card .features li {
+      font-size: 16px;
+      font-weight: 400;
+      color: #555;
+    }
+  </style>
+  <style>
+    /* --- Standardized Styles for All Cards --- */
+
+    /* Standardize Tab Button Font */
+    .tab-button {
+        font-size: 16px !important;
+        font-weight: 600 !important;
+    }
+
+    /* Standardize Card Title Font */
+    .license-card h3 {
+        font-size: 1.6rem !important;
+        font-weight: 700 !important;
+    }
+
+    /* Standardize Card Price Font */
+    .license-card .price {
+        font-size: 1.8rem !important;
+        font-weight: 700 !important;
+    }
+
+    /* Standardize Card Button Font */
+    .license-card .buy-button {
+        font-size: 1rem !important;
+        font-weight: bold !important;
+        min-width: 120px; /* Add this line */
+    }
+
+    /* Standardize Features List Font */
+    .license-card .features li,
+    .license-card .features li span {
+        font-size: 16px !important;
+        font-weight: 400 !important;
+    }
+
+    .dropdown-tabs {
+      display: none;
+      padding: 1rem;
+    }
+
+    #tab-switcher {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      background-color: #f9f9f9;
+      font-size: 1rem;
+      font-weight: 400;
+      cursor: pointer;
+    }
+
+    @media (max-width: 1520px) {
+      .license-tabs-container {
+        justify-content: flex-start;
+      }
+      .license-tabs {
+        justify-content: flex-start;
+      }
+      .license-tabs-wrapper .scroll-arrow {
+        display: block;
+      }
+      .license-cards-container {
+        justify-content: flex-start;
+      }
+      .license-card {
+        flex: 0 0 325px;
+      }
+      .license-cards-container-wrapper {
+        padding: 0 60px;
+        max-width: 1155px; /* (3 * 325px) + (2 * 24px for gaps) + 12px buffer */
+        margin: 0 auto;
+      }
+      .license-cards-container-wrapper .scroll-arrow.prev {
+        left: 10px;
+      }
+      .license-cards-container-wrapper .scroll-arrow.next {
+        right: 10px;
+      }
+    }
+
+    @media (min-width: 1521px) {
+      .license-tabs {
+        justify-content: center;
+      }
+      .license-tabs-wrapper .scroll-arrow {
+        display: none;
+      }
+      .license-cards-container-wrapper {
+        margin: 0 -5px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .license-tabs-wrapper {
+        display: none;
+      }
+
+      .license-tabs {
+        display: none;
+      }
+    
+      .dropdown-tabs {
+        display: block;
+        padding: 1rem;
+      }
+    
+      .license-cards-container-wrapper {
+        padding: 0;
+        max-width: 320px; /* Ensure only one card is visible at a time */
+        margin: 0 auto;
+      }
+    
+      .license-cards-container {
+        display: flex;
+        flex-direction: row;
+        align-items: stretch; 
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        gap: 0;
+        padding: 0;
+        justify-content: flex-start; 
+      }
+    
+      .license-card {
+        flex: 0 0 320px;
+        max-width: 320px;
+        scroll-snap-align: center;
+        margin: 0 auto; /* Ensure cards are centered */
+      }
+
+      #bitrix24-licenses .license-card {
+        width: 320px;
+        max-width: 320px;
+        flex: 0 0 320px;
+        margin: 0 auto;
+      }
+
+      .scroll-arrow {
+        display: none;
+      }
+
+      /* Disable hover effects on mobile */
+      .license-card:hover {
+        box-shadow: none;
+        transform: none;
+      }
+
+      .tab-button:hover {
+        background-color: inherit;
+      }
+
+      .scroll-arrow:hover {
+        background-color: rgba(255, 255, 255, 0.9);
+        box-shadow: none;
+      }
+
+      .license-card .buy-button:hover {
+        background: linear-gradient(45deg, #00AFFF, #007BFF);
+        box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+      }
+
+      .license-card .user-count {
+        word-break: break-word;
+      }
+
+      /* --- Show scrollbar on mobile --- */
+      .license-card .features {
+        /* For Firefox */
+        scrollbar-width: thin;
+        scrollbar-color: #888 #f1f1f1;
+      }
+
+      /* For Webkit browsers (Chrome, Safari) */
+      .license-card .features::-webkit-scrollbar {
+        display: block; /* Force scrollbar to display */
+        width: 8px;
+      }
+
+      .license-card .features::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+
+      .license-card .features::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+      }
+
+      .user-select-dropdown {
+        box-sizing: border-box;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+  <div>
+    <div class="license-tabs-wrapper">
+      <div class="license-tabs-container">
+        <button class="scroll-arrow prev" id="tab-scroll-prev">❮</button>
+        <div class="license-tabs">
+          <button class="tab-button active" data-tab="bitrix24-licenses">Лицензия Битрикс24</button><button class="tab-button" data-tab="1c-bitrix-licenses">Лицензия 1С Битрикс</button><button class="tab-button" data-tab="amo-crm-licenses">amoCRM</button><button class="tab-button" data-tab="amo-crm-extra">Дополнительные тарифы amoCRM</button><button class="tab-button" data-tab="amo-crm-special">Пакеты по особым условиям amoCRM</button><button class="tab-button" data-tab="cms-bitrix">cms Bitrix</button><button class="tab-button" data-tab="cms-wordpress">cms Wordpress</button><button class="tab-button" data-tab="samopisniy-sayt">Самописный сайт</button>
+        </div>
+        <button class="scroll-arrow next" id="tab-scroll-next">❯</button>
+      </div>
+    </div>
+    <div class="dropdown-tabs">
+      <select id="tab-switcher" class="form-control">
+        <option value="bitrix24-licenses">Лицензия Битрикс24</option>
+        <option value="1c-bitrix-licenses">Лицензия 1С Битрикс</option>
+        <option value="amo-crm-licenses">amoCRM</option>
+        <option value="amo-crm-extra">Дополнительные тарифы amoCRM</option>
+        <option value="amo-crm-special">Пакеты по особым условиям amoCRM</option>
+        <option value="cms-bitrix">cms Bitrix</option>
+        <option value="cms-wordpress">cms Wordpress</option>
+        <option value="samopisniy-sayt">Самописный сайт</option>
+      </select>
+    </div>
+    <div class="license-tab-content active" id="bitrix24-licenses">
+      <div class="price-switch-wrapper">
+        <span class="price-switch-label">
+          Месяц
+        </span>
+        <label class="price-switch">
+          <input id="price-toggle" type="checkbox" />
+          <span class="slider">
+          </span>
+        </label>
+        <span class="price-switch-label">
+          Год
+          <span class="discount-badge">
+            -20%
+          </span>
+        </span>
+      </div>
+      <div class="license-cards-container-wrapper">
+
+<div class="mobile-scroll-arrows">
+  <button class="mobile-arrow left" onclick="scrollMobileCards(this, -1)">❮</button>
+  <button class="mobile-arrow right" onclick="scrollMobileCards(this, 1)">❯</button>
+</div>
+
+        <button class="scroll-arrow prev" disabled="">
+          ❮
+        </button>
+        <div class="license-cards-container">
+          <!-- Cards will be injected here by JS -->
+        </div>
+        <button class="scroll-arrow next">
+          ❯
+        </button>
+      </div>
+    </div>
+    <div class="license-tab-content" id="1c-bitrix-licenses">
+      <div class="license-cards-container-wrapper">
+
+<div class="mobile-scroll-arrows">
+  <button class="mobile-arrow left" onclick="scrollMobileCards(this, -1)">❮</button>
+  <button class="mobile-arrow right" onclick="scrollMobileCards(this, 1)">❯</button>
+</div>
+
+        <div class="license-cards-container">
+          <!-- Card 1: Интернет-магазин + CRM -->
+          <div class="license-card" data-title="Интернет-магазин + CRM" >
+            <div class="card-header">
+              <h3>
+                Интернет-магазин + CRM
+              </h3>
+              <p class="card-subtitle">
+                Пользователи: 12
+              </p>
+            </div>
+            <div class="card-body">
+              <div class="price-container">
+                <span class="price">
+                  109 000 ₽
+                </span>
+                <span class="period">
+                  Лицензия: 12 мес
+                </span>
+              </div>
+              <a class="buy-button" href="#">
+                КУПИТЬ
+              </a>
+            </div>
+            <div class="card-footer">
+              <ul class="features">
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Экстранет
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    eCommerce-платформа
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    CoPilot
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #ff4d4d; margin-right: 8px; line-height: 1.4;">
+                    ✗
+                  </span>
+                  <span>
+                    Документы Онлайн
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #ff4d4d; margin-right: 8px; line-height: 1.4;">
+                    ✗
+                  </span>
+                  <span>
+                    Кадровый документооборот
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #ff4d4d; margin-right: 8px; line-height: 1.4;">
+                    ✗
+                  </span>
+                  <span>
+                    Многодепартаментность
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #ff4d4d; margin-right: 8px; line-height: 1.4;">
+                    ✗
+                  </span>
+                  <span>
+                    Веб-кластер
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #ff4d4d; margin-right: 8px; line-height: 1.4;">
+                    ✗
+                  </span>
+                  <span>
+                    VIP поддержка 24/7
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <!-- Card 2: Корпоративный портал -->
+          <div class="license-card popular" data-title="Корпоративный портал" >
+            <div class="card-header">
+              <h3>
+                Корпоративный портал
+              </h3>
+              <p class="card-subtitle">
+                <select class="user-select-dropdown" id="corporate-users">
+                  <option value="50">
+                    50 пользователей
+                  </option>
+                  <option value="100">
+                    100 пользователей
+                  </option>
+                  <option value="250">
+                    250 пользователей
+                  </option>
+                  <option value="500">
+                    500 пользователей
+                  </option>
+                </select>
+              </p>
+            </div>
+            <div class="card-body">
+              <div class="price-container" style="text-align: center;">
+                <span class="price" id="corporate-price">
+                  159 000 ₽
+                </span>
+                <span class="period">
+                  Лицензия: 12 мес
+                </span>
+              </div>
+              <a class="buy-button" href="#">
+                КУПИТЬ
+              </a>
+            </div>
+            <div class="card-footer">
+              <ul class="features">
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Экстранет
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    eCommerce-платформа
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    CoPilot
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Документы Онлайн
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Кадровый документооборот
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #ff4d4d; margin-right: 8px; line-height: 1.4;">
+                    ✗
+                  </span>
+                  <span>
+                    Многодепартаментность
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #ff4d4d; margin-right: 8px; line-height: 1.4;">
+                    ✗
+                  </span>
+                  <span>
+                    Веб-кластер
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #ff4d4d; margin-right: 8px; line-height: 1.4;">
+                    ✗
+                  </span>
+                  <span>
+                    VIP поддержка 24/7
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <!-- Card 3: Энтерпрайз -->
+          <div class="license-card" data-title="Энтерпрайз" >
+            <div class="card-header">
+              <h3>
+                Энтерпрайз
+              </h3>
+              <p class="card-subtitle">
+                Пользователи: 1000+
+              </p>
+            </div>
+            <div class="card-body">
+              <div class="price-container">
+                <span class="price">
+                  1 299 000+ ₽
+                </span>
+                <span class="period">
+                  Лицензия: 12 мес
+                </span>
+              </div>
+              <a class="buy-button" href="#">
+                КУПИТЬ
+              </a>
+            </div>
+            <div class="card-footer">
+              <ul class="features">
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Экстранет
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    eCommerce-платформа
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    CoPilot
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Документы Онлайн
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Кадровый документооборот
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Многодепартаментность
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Веб-кластер
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    VIP поддержка 24/7
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="license-tab-content" id="amo-crm-licenses">
+      <div class="license-cards-container-wrapper">
+
+<div class="mobile-scroll-arrows">
+  <button class="mobile-arrow left" onclick="scrollMobileCards(this, -1)">❮</button>
+  <button class="mobile-arrow right" onclick="scrollMobileCards(this, 1)">❯</button>
+</div>
+
+        <div class="license-cards-container">
+          <!-- Card 1: БАЗОВЫЙ -->
+          <div class="license-card" data-title="БАЗОВЫЙ" >
+            <div class="card-header">
+              <h3>
+                БАЗОВЫЙ
+              </h3>
+              <p class="card-subtitle">
+                Идеально для старта и небольших команд
+              </p>
+            </div>
+            <div class="card-body">
+              <div class="price-container">
+                <span class="price">
+                  599 ₽
+                </span>
+                <span class="period">
+                  (за 1 пользователя / мес)
+                </span>
+                <span class="old-price">
+                </span>
+              </div>
+              <a class="buy-button" href="#">
+                КУПИТЬ
+              </a>
+              <p class="storage-info">
+                <strong>
+                  Дисковое пространство:
+                </strong>
+                100 MB на пользователя
+              </p>
+            </div>
+            <div class="card-footer">
+              <ul class="features">
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Количество контактов и компаний: 5 000 на пользователя
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Количество открытых сделок: 500 на пользователя
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✗
+                  </span>
+                  <span>
+                    Количество покупателей: —
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Количество доп. полей: 100 на аккаунт
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✗
+                  </span>
+                  <span>
+                    Количество триггеров: —
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Хранение расширенной истории: 1 месяц на аккаунт
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Ограничение API: 50 запросов в сек. на аккаунт
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    50 сканов визиток в приложении: ✔
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Мобильное приложение: ✔
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <!-- Card 2: РАСШИРЕННЫЙ -->
+          <div class="license-card popular" data-title="РАСШИРЕННЫЙ" >
+            <div class="card-header">
+              <h3>
+                РАСШИРЕННЫЙ
+              </h3>
+              <p class="card-subtitle">
+                Акция!
+              </p>
+            </div>
+            <div class="card-body">
+              <div class="price-container">
+                <span class="price">
+                  1 099 ₽
+                </span>
+                <span class="old-price" style="text-decoration: line-through; color: #999;">
+                  1 199 ₽
+                </span>
+                <span class="period">
+                  (за 1 пользователя / мес)
+                </span>
+                <p style="color: #28a745; margin-top: 5px;">
+                  Цена до 1 сентября
+                </p>
+              </div>
+              <a class="buy-button" href="#">
+                КУПИТЬ
+              </a>
+              <p class="storage-info">
+                <strong>
+                  Дисковое пространство:
+                </strong>
+                200 MB на пользователя
+              </p>
+            </div>
+            <div class="card-footer">
+              <ul class="features">
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Количество контактов и компаний: 10 000 на пользователя
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Количество открытых сделок: 1 000 на пользователя
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Количество покупателей: 1 000 на пользователя
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Количество доп. полей: 200 на аккаунт
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Количество триггеров: 100 на аккаунт
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Хранение расширенной истории: 6 месяцев на аккаунт
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Ограничение API: 50 запросов в сек. на аккаунт
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    50 сканов визиток в приложении: ✔
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Мобильное приложение: ✔
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <!-- Card 3: ПРОФЕССИОНАЛЬНЫЙ -->
+          <div class="license-card" data-title="ПРОФЕССИОНАЛЬНЫЙ" >
+            <div class="card-header">
+              <h3>
+                ПРОФЕССИОНАЛЬНЫЙ
+              </h3>
+              <p class="card-subtitle">
+                Акция!
+              </p>
+            </div>
+            <div class="card-body">
+              <div class="price-container">
+                <span class="price">
+                  1 599 ₽
+                </span>
+                <span class="old-price" style="text-decoration: line-through; color: #999;">
+                  1 699 ₽
+                </span>
+                <span class="period">
+                  (за 1 пользователя / мес)
+                </span>
+                <p style="color: #28a745; margin-top: 5px;">
+                  Цена до 1 сентября
+                </p>
+              </div>
+              <a class="buy-button" href="#">
+                КУПИТЬ
+              </a>
+              <p class="storage-info">
+                <strong>
+                  Дисковое пространство:
+                </strong>
+                400 MB на пользователя
+              </p>
+            </div>
+            <div class="card-footer">
+              <ul class="features">
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Количество контактов и компаний: 20 000 на пользователя
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Количество открытых сделок: 3 000 на пользователя
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Количество покупателей: 3 000 на пользователя
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Количество доп. полей: 400 на аккаунт
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Количество триггеров: Без ограничений
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Хранение расширенной истории: Без ограничений
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Ограничение API: 50 запросов в сек. на аккаунт
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    50 сканов визиток в приложении: ✔
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Мобильное приложение: ✔
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Tab 4: Дополнительные тарифы -->
+    <div class="license-tab-content" id="amo-crm-extra">
+      <div class="license-cards-container-wrapper">
+
+<div class="mobile-scroll-arrows">
+  <button class="mobile-arrow left" onclick="scrollMobileCards(this, -1)">❮</button>
+  <button class="mobile-arrow right" onclick="scrollMobileCards(this, 1)">❯</button>
+</div>
+
+        <div class="license-cards-container">
+          <!-- Card 1: Enterprise -->
+          <div class="license-card" data-title="Enterprise" >
+            <div class="card-header">
+              <h3>
+                Enterprise
+              </h3>
+              <p class="card-subtitle">
+                до 1 сентября
+              </p>
+            </div>
+            <div class="card-body">
+              <div class="price-container">
+                <span class="price">
+                  3 099 ₽
+                </span>
+                <span class="old-price" style="text-decoration: line-through; color: #999;">
+                  3 999 ₽
+                </span>
+                <span class="period">
+                  за 1 польз. / мес
+                </span>
+              </div>
+              <a class="buy-button" href="#">
+                КУПИТЬ
+              </a>
+            </div>
+            <div class="card-footer">
+              <ul class="features">
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Решение для 200+ пользователей
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Функционал профессионального плана
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Личный менеджер
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Выделенная линия технической поддержки
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Гарантированные условия на время ответа и критичность ошибок в работе системы,
+                    прописанные в SLA*
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Доступна интеграция с SSO
+                  </span>
+                </li>
+                <li style="color: #888;">
+                  *Подробные условия предоставляются по запросу в чате технической поддержки
+                </li>
+              </ul>
+            </div>
+          </div>
+          <!-- Card 2: ENTERPRISE LITE -->
+          <div class="license-card" data-title="ENTERPRISE LITE" >
+            <div class="card-header">
+              <h3>
+                ENTERPRISE LITE
+              </h3>
+              <p class="card-subtitle">
+                до 1 сентября
+              </p>
+            </div>
+            <div class="card-body">
+              <div class="price-container">
+                <span class="price">
+                  699 ₽
+                </span>
+                <span class="old-price" style="text-decoration: line-through; color: #999;">
+                  999 ₽
+                </span>
+                <span class="period">
+                  за 1 польз. / мес
+                </span>
+              </div>
+              <a class="buy-button" href="#">
+                КУПИТЬ
+              </a>
+            </div>
+            <div class="card-footer">
+              <ul class="features">
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Решение для 30+ пользователей
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Личный менеджер
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Доступна интеграция с SSO
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Дополнительные лимиты
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Участие в закрытых мероприятиях amoCRM
+                  </span>
+                </li>
+                <li style="color: #888;">
+                  *Подробные условия предоставляются по запросу в чате технической поддержки
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Tab 5: Пакеты по особым условиям -->
+    <div class="license-tab-content" id="amo-crm-special">
+      <div class="license-cards-container-wrapper">
+
+<div class="mobile-scroll-arrows">
+  <button class="mobile-arrow left" onclick="scrollMobileCards(this, -1)">❮</button>
+  <button class="mobile-arrow right" onclick="scrollMobileCards(this, 1)">❯</button>
+</div>
+
+        <div class="license-cards-container">
+          <!-- Card 1: Микро-бизнес -->
+          <div class="license-card" data-title="Микро-бизнес" >
+            <div class="card-header">
+              <h3>
+                Микро-бизнес
+              </h3>
+              <p class="card-subtitle">
+                до 1 сентября
+              </p>
+            </div>
+            <div class="card-body">
+              <div class="price-container">
+                <span class="price">
+                  7 999 ₽/год
+                </span>
+                <span class="old-price" style="text-decoration: line-through; color: #999;">
+                  8 999 ₽/год
+                </span>
+              </div>
+              <a class="buy-button" href="#">
+                КУПИТЬ
+              </a>
+            </div>
+            <div class="card-footer">
+              <ul class="features">
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✓
+                  </span>
+                  <span>
+                    Решение для двух пользователей
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✓
+                  </span>
+                  <span>
+                    Функционал базового плана
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✓
+                  </span>
+                  <span>
+                    Кол-во контактов и компаний/открытых сделок: 5 000 / 1 000 на 1 аккаунт
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✓
+                  </span>
+                  <span>
+                    Дисковое пространство для документов: 200 МБ на 1 аккаунт
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✓
+                  </span>
+                  <span>
+                    Количество дополнительных полей в аккаунте: 100 на аккаунт
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #ff4d4d; margin-right: 8px; line-height: 1.4;">
+                    ✗
+                  </span>
+                  <span>
+                    Разграничение прав доступа пользователей
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <!-- Card 2: Старт-ап -->
+          <div class="license-card" data-title="Старт-ап" >
+            <div class="card-header">
+              <h3>
+                Старт-ап
+              </h3>
+              <p class="card-subtitle">
+              </p>
+              <!-- for alignment -->
+            </div>
+            <div class="card-body">
+              <div class="price-container">
+                <span class="price">
+                  19 999 ₽/год
+                </span>
+                <span class="old-price">
+                </span>
+              </div>
+              <a class="buy-button" href="#">
+                КУПИТЬ
+              </a>
+            </div>
+            <div class="card-footer">
+              <ul class="features">
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✓
+                  </span>
+                  <span>
+                    Решение для пяти пользователей
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✓
+                  </span>
+                  <span>
+                    Функционал базового плана
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✓
+                  </span>
+                  <span>
+                    Кол-во контактов и компаний/открытых сделок: 12 500 / 2 500 на 1 аккаунт
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✓
+                  </span>
+                  <span>
+                    Дисковое пространство для документов: 500 МБ на 1 аккаунт
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✓
+                  </span>
+                  <span>
+                    Кол-во дополнительных полей в аккаунте: 100 на аккаунт
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #ff4d4d; margin-right: 8px; line-height: 1.4;">
+                    ✗
+                  </span>
+                  <span>
+                    Регулярный отчет по email или в Telegram (конструктор отчетов с уведомлениями)
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #ff4d4d; margin-right: 8px; line-height: 1.4;">
+                    ✗
+                  </span>
+                  <span>
+                    Разграничение прав доступа пользователей
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="license-tab-content" id="cms-bitrix">
+      <div class="license-cards-container-wrapper">
+
+<div class="mobile-scroll-arrows">
+  <button class="mobile-arrow left" onclick="scrollMobileCards(this, -1)">❮</button>
+  <button class="mobile-arrow right" onclick="scrollMobileCards(this, 1)">❯</button>
+</div>
+
+        <div class="license-cards-container">
+          <div class="license-card" data-title="Разработка сайта" >
+            <div class="card-header">
+              <h3>Разработка сайта</h3>
+            </div>
+            <div class="card-body">
+              <div class="price-container">
+                <span class="price">Договорная</span>
+              </div>
+              <a class="buy-button" href="#">СВЯЗАТЬСЯ</a>
+            </div>
+            <div class="card-footer">
+              <ul class="features">
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Установка и настройка CMS Bitrix
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Разработка уникального дизайна
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Интеграция с 1С
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Базовая SEO-оптимизация
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Адаптивная верстка
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="license-card" data-title="Доработка сайта" >
+            <div class="card-header">
+              <h3>Доработка сайта</h3>
+            </div>
+            <div class="card-body">
+              <div class="price-container">
+                <span class="price">Договорная</span>
+              </div>
+              <a class="buy-button" href="#">СВЯЗАТЬСЯ</a>
+            </div>
+            <div class="card-footer">
+              <ul class="features">
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Аудит и выявление проблем
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Разработка новых модулей
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Оптимизация скорости загрузки
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Исправление ошибок
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Интеграция с CRM
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="license-card" data-title="Обслуживание сайта" >
+            <div class="card-header">
+              <h3>Обслуживание сайта</h3>
+            </div>
+            <div class="card-body">
+              <div class="price-container">
+                <span class="price">Договорная</span>
+              </div>
+              <a class="buy-button" href="#">СВЯЗАТЬСЯ</a>
+            </div>
+            <div class="card-footer">
+              <ul class="features">
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Регулярное резервное копирование
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Мониторинг доступности 24/7
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Обновление модулей и ядра
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Консультации по работе с сайтом
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Защита от вирусов
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="license-tab-content" id="cms-wordpress">
+      <div class="license-cards-container-wrapper">
+
+<div class="mobile-scroll-arrows">
+  <button class="mobile-arrow left" onclick="scrollMobileCards(this, -1)">❮</button>
+  <button class="mobile-arrow right" onclick="scrollMobileCards(this, 1)">❯</button>
+</div>
+
+        <div class="license-cards-container">
+          <div class="license-card" data-title="Разработка сайта" >
+            <div class="card-header">
+              <h3>Разработка сайта</h3>
+            </div>
+            <div class="card-body">
+              <div class="price-container">
+                <span class="price">Договорная</span>
+              </div>
+              <a class="buy-button" href="#">СВЯЗАТЬСЯ</a>
+            </div>
+            <div class="card-footer">
+              <ul class="features">
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Установка и настройка CMS Wordpress
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Подбор и кастомизация шаблона
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Установка необходимых плагинов
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Базовая SEO-оптимизация
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Создание блога
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="license-card" data-title="Доработка сайта" >
+            <div class="card-header">
+              <h3>Доработка сайта</h3>
+            </div>
+            <div class="card-body">
+              <div class="price-container">
+                <span class="price">Договорная</span>
+              </div>
+              <a class="buy-button" href="#">СВЯЗАТЬСЯ</a>
+            </div>
+            <div class="card-footer">
+              <ul class="features">
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Оптимизация скорости (Lighthouse)
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Разработка кастомных плагинов
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Интеграция с WooCommerce
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Исправление конфликтов плагинов
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Перенос на другой хостинг
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="license-card" data-title="Обслуживание сайта" >
+            <div class="card-header">
+              <h3>Обслуживание сайта</h3>
+            </div>
+            <div class="card-body">
+              <div class="price-container">
+                <span class="price">Договорная</span>
+              </div>
+              <a class="buy-button" href="#">СВЯЗАТЬСЯ</a>
+            </div>
+            <div class="card-footer">
+              <ul class="features">
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Ежедневные бэкапы
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Мониторинг безопасности
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Обновление плагинов и темы
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Техническая поддержка
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Чистка от вредоносного кода
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="license-tab-content" id="samopisniy-sayt">
+      <div class="license-cards-container-wrapper">
+
+<div class="mobile-scroll-arrows">
+  <button class="mobile-arrow left" onclick="scrollMobileCards(this, -1)">❮</button>
+  <button class="mobile-arrow right" onclick="scrollMobileCards(this, 1)">❯</button>
+</div>
+
+        <div class="license-cards-container">
+          <div class="license-card" data-title="Разработка сайта" >
+            <div class="card-header">
+              <h3>Разработка сайта</h3>
+            </div>
+            <div class="card-body">
+              <div class="price-container">
+                <span class="price">Договорная</span>
+              </div>
+              <a class="buy-button" href="#">СВЯЗАТЬСЯ</a>
+            </div>
+            <div class="card-footer">
+              <ul class="features">
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Разработка на PHP/Python/Node.js
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Проектирование архитектуры
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Создание кастомной админ-панели
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Интеграция с любыми API
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Высокая производительность
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="license-card" data-title="Доработка сайта" >
+            <div class="card-header">
+              <h3>Доработка сайта</h3>
+            </div>
+            <div class="card-body">
+              <div class="price-container">
+                <span class="price">Договорная</span>
+              </div>
+              <a class="buy-button" href="#">СВЯЗАТЬСЯ</a>
+            </div>
+            <div class="card-footer">
+              <ul class="features">
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Рефакторинг существующего кода
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Оптимизация запросов к БД
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Внедрение нового функционала
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Переход на новый фреймворк
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Аудит безопасности
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="license-card" data-title="Обслуживание сайта" >
+            <div class="card-header">
+              <h3>Обслуживание сайта</h3>
+            </div>
+            <div class="card-body">
+              <div class="price-container">
+                <span class="price">Договорная</span>
+              </div>
+              <a class="buy-button" href="#">СВЯЗАТЬСЯ</a>
+            </div>
+            <div class="card-footer">
+              <ul class="features">
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Поддержка и мониторинг сервера
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Резервное копирование
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Обновление модулей и ядра
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Консультации по работе с сайтом
+                  </span>
+                </li>
+                <li>
+                  <span style="color: #28a745; margin-right: 8px; line-height: 1.4;">
+                    ✔
+                  </span>
+                  <span>
+                    Защита от вирусов
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    
+
+    const containers = document.querySelectorAll('.license-cards-container');
+
+    containers.forEach(container => {
+      let isDown = false;
+      let startX;
+      let scrollLeft;
+
+      container.addEventListener('mousedown', (e) => {
+        isDown = true;
+        container.classList.add('active');
+        startX = e.pageX - container.offsetLeft;
+        scrollLeft = container.scrollLeft;
+      });
+
+      container.addEventListener('mouseleave', () => {
+        isDown = false;
+        container.classList.remove('active');
+      });
+
+      container.addEventListener('mouseup', () => {
+        isDown = false;
+        container.classList.remove('active');
+      });
+
+      container.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - container.offsetLeft;
+        const walk = (x - startX) * 3; //scroll-fast
+        container.scrollLeft = scrollLeft - walk;
+      });
+
+      // Touch events for mobile
+      container.addEventListener('touchstart', (e) => {
+        isDown = true;
+        startX = e.touches[0].pageX - container.offsetLeft;
+        scrollLeft = container.scrollLeft;
+      });
+
+      container.addEventListener('touchend', () => {
+        isDown = false;
+      });
+
+      container.addEventListener('touchmove', (e) => {
+        if (!isDown) return;
+        const x = e.touches[0].pageX - container.offsetLeft;
+        const walk = (x - startX) * 3; //scroll-fast
+        container.scrollLeft = scrollLeft - walk;
+      });
+    });
+  </script>
+
+<style>
+@media (max-width: 768px) {
+  .mobile-scroll-arrows {
+    display: block;
+  }
+
+  .mobile-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 20;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 23px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  .license-cards-container-wrapper {
+    position: relative;
+  }
+
+  .mobile-arrow.left {
+    left: 0;
+  }
+
+  .mobile-arrow.right {
+    right: 0;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-scroll-arrows {
+    display: none;
+  }
+}
+</style>
+<script>
+function scrollMobileCards(button, direction) {
+  const container = button.closest('.license-tab-content').querySelector('.license-cards-container');
+  const card = container.querySelector('.license-card');
+  const cardWidth = card.offsetWidth;
+  container.scrollBy({ left: direction * cardWidth, behavior: 'smooth' });
+}
+</script>
+
+<!-- Bitrix24 форма -->
+<script data-b24-form="click/6/30ks5n" data-skip-moving="true">
+(function(w,d,u){
+  var s=d.createElement('script');s.async=true;s.src=u+'?'+(Date.now()/180000|0);
+  var h=d.getElementsByTagName('script')[0];h.parentNode.insertBefore(s,h);
+})(window,document,'https://b24.turkmen-tranzit.com/upload/crm/form/loader_6_30ks5n.js');
+</script>
+
+<!-- Автоматически назначаем открытие формы на кнопки -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll('a.buy-button, a, button').forEach(btn => {
+      const text = btn.textContent.trim().toLowerCase();
+      if (['купить', 'связаться', 'создать'].includes(text)) {
+        btn.setAttribute('data-b24-form', 'click/6/30ks5n');
+        btn.setAttribute('href', 'javascript:void(0);');
+      }
+    });
+  });
+</script>
+
+</body>
+  </div>
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const navToggle = document.querySelector('.nav-toggle');
+      const body = document.body;
+
+
+      // License Mega Menu Logic
+      const licenseData = {
+        'bitrix24-licenses': [{
+          title: 'Бесплатный',
+          subtitle: 'Начните работать онлайн и продавать больше с CRM',
+          users: 'неограниченно пользователей',
+          price: { month: 0, year: 0 },
+          storage: '5 ГБ',
+          features: ['<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Календарь</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Соцсеть компании</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Лента</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Доски</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>База знаний</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Чат</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Каналы</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Битрикс24 Синк</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Коллабы</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Задачи и Проекты</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>CRM</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>CoPilot</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Онлайн-подпись</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Диск</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Контакт-центр</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Сайты</span></li>'],
+          buttonText: 'СОЗДАТЬ',
+          popular: false
+        }, {
+          title: 'Базовый',
+          subtitle: 'CRM для небольших отделов продаж',
+          users: '5 пользователей',
+          price: { month: 2490, year: 1990 },
+          storage: '24 ГБ',
+          features: ['<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Календарь</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Соцсеть компании</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Лента</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Доски</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>База знаний</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Чат</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Каналы</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Битрикс24 Синк</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Коллабы</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Задачи и Проекты</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>CRM</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>CoPilot</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Онлайн-подпись</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Диск</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Контакт-центр</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Сайты</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Интернет-магазин</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Поддержка</span></li>'],
+          buttonText: 'КУПИТЬ',
+          popular: false
+        }, {
+          title: 'Стандартный',
+          subtitle: 'Для совместной работы всей компании или рабочих групп',
+          users: '50 пользователей',
+          price: { month: 6990, year: 5590 },
+          storage: '100 ГБ',
+          features: ['<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Календарь</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Соцсеть компании</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Лента</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Доски</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>База знаний</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Чат</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Каналы</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Битрикс24 Синк</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Коллабы</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Задачи и Проекты</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>CRM</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>CoPilot</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Онлайн-подпись</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Диск</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Контакт-центр</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Сайты</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Интернет-магазин</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Маркетинг</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Документы Онлайн</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>КЭДО + Госключ</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Поддержка</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Администрирование</span></li>'],
+          buttonText: 'КУПИТЬ',
+          popular: false
+        }, {
+          title: 'Профессиональный',
+          subtitle: 'Для максимальной автоматизации всех процессов в компании',
+          users: '100 пользователей',
+          price: { month: 13990, year: 11190 },
+          storage: '1 024 ГБ',
+          features: ['<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Календарь</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Соцсеть компании</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Лента</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Доски</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>База знаний</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Чат</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Каналы</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Битрикс24 Синк</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Коллабы</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Задачи и Проекты</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>CRM</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>CRM №1</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>CoPilot</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Онлайн-подпись</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Диск</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Контакт-центр</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Сайты</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Интернет-магазин</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Маркетинг</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Документы Онлайн</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>КЭДО + Госключ</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Онлайн-запись</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Сквозная аналитика</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Автоматизация</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>HR: Компания</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Поддержка</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Администрирование</span></li>'],
+          buttonText: 'КУПИТЬ',
+          popular: true
+        }, {
+          title: 'Энтерпрайз',
+          subtitle: 'Почему Битрикс24 Энтерпрайз?',
+          features: ['<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Календарь</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Соцсеть компании</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Лента</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Доски</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>База знаний</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Чат</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Каналы</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Битрикс24 Синк</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Коллабы</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Задачи и Проекты</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>CRM</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>CRM №1</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>CoPilot</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Онлайн-подпись</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Диск</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Контакт-центр</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Сайты</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Интернет-магазин</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Маркетинг</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Документы Онлайн</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>КЭДО + Госключ</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Онлайн-запись</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Сквозная аналитика</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Автоматизация</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>HR: Компания</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Филиалы</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Энтерпрайз-кластер</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Энтерпрайз-пакет</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Поддержка</span></li>',
+            '<li style="display: flex; align-items: start;"><span style="color: #28a745; margin-right: 8px; font-weight: bold; line-height: 1.4;">✔</span><span>Администрирование</span></li>'],
+          buttonText: 'КУПИТЬ',
+          popular: false,
+          userTiers: [{ users: 250, price: { month: 33990, year: 27192 }, storage: '3 ТБ' }, { users: 500, price: { month: 59990, year: 47992 }, storage: '5 ТБ' }, { users: 1000, price: { month: 99990, year: 79992 }, storage: '10 ТБ' }, { users: 2000, price: { month: 199990, year: 159992 }, storage: '20 ТБ' }, { users: 3000, price: { month: 299990, year: 239992 }, storage: '30 ТБ' }, { users: 4000, price: { month: 399990, year: 319992 }, storage: '40 ТБ' }, { users: 5000, price: { month: 499990, year: 399992 }, storage: '50 ТБ' }, { users: 6000, price: { month: 599990, year: 479992 }, storage: '60 ТБ' }, { users: 7000, price: { month: 699990, year: 559992 }, storage: '70 ТБ' }, { users: 8000, price: { month: 799990, year: 639992 }, storage: '80 ТБ' }, { users: 9000, price: { month: 899990, year: 719992 }, storage: '90 ТБ' }, { users: 10000, price: { month: 999990, year: 799992 }, storage: '100 ТБ' }]
+        }]
+      };
+      
+      
+      function formatPrice(price) {
+        if (price === 0) return '0 ₽';
+        return new Intl.NumberFormat('ru-RU').format(price) + ' ₽';
+      } 
+      
+      function createLicenseCard(cardData, isYearly) {
+        let price, oldPrice, userContent, storage;
+        const period = '/мес.';
+        if (cardData.userTiers) {
+          const selectedTier = cardData.userTiers[0];
+          price = formatPrice(isYearly ? selectedTier.price.year : selectedTier.price.month);
+          oldPrice = isYearly ? formatPrice(selectedTier.price.month) : null;
+          storage = selectedTier.storage;
+          userContent = `
+                <select class="user-select-dropdown" data-card-title="${cardData.title}">
+                    ${cardData.userTiers.map(tier => `<option value="${tier.users}">${tier.users} пользователей</option>`).join('')}</select>
+            `;
+        } else {
+          price = formatPrice(isYearly ? cardData.price.year : cardData.price.month);
+          oldPrice = isYearly ? formatPrice(cardData.price.month) : null;
+          storage = cardData.storage;
+          userContent = `<p class="user-count">${cardData.users}</p>`;
+        } return `
+            <div class="license-card ${cardData.popular ? 'popular' : ''}" data-title="${cardData.title}">
+                <div class="card-header">
+                    <h3>${cardData.title}</h3>
+                    <p class="card-subtitle">${cardData.subtitle}</p>
+                </div>
+                <div class="card-body">
+                    ${userContent}<div class="price-container">
+                        <span class="price">${price}<span class="period">${period}</span></span>
+                        ${oldPrice ? `<span class="old-price">${oldPrice}${period}</span>` : '<span class="old-price">&nbsp;</span>'}</div>
+                    <a href="#" class="buy-button">${cardData.buttonText}</a>
+                    <p class="storage-info"><strong>Хранилище:</strong> ${storage}</p>
+                </div>
+                <div class="card-footer">
+                    <ul class="features">
+                        ${cardData.features.map(f => `<li>${f}</li>`).join('')}</ul>
+                </div>
+            </div>
+        `;
+      } 
+      
+      function renderLicenseCards(tabId, isYearly) {
+        const container = document.querySelector(`#${tabId} .license-cards-container`);
+        if (!container) return;
+        const cardsHtml = licenseData[tabId].map(card => createLicenseCard(card, isYearly)).join('');
+        container.innerHTML = cardsHtml;
+        addDropdownEventListeners();
+      } 
+      
+      function addDropdownEventListeners() {
+        document.querySelectorAll('.user-select-dropdown').forEach(dropdown => {
+          dropdown.addEventListener('change', function () {
+            const selectedUsers = parseInt(this.value);
+            const cardTitle = this.dataset.cardTitle;
+            const isYearly = document.getElementById('price-toggle').checked;
+            const cardData = licenseData['bitrix24-licenses'].find(c => c.title === cardTitle);
+            const selectedTier = cardData.userTiers.find(t => t.users === selectedUsers);
+            const price = formatPrice(isYearly ? selectedTier.price.year : selectedTier.price.month);
+            const oldPrice = isYearly ? formatPrice(selectedTier.price.month) : null;
+            const period = '/мес.';
+            const cardElement = this.closest('.license-card');
+            cardElement.querySelector('.price').innerHTML = `${price}<span class="period">${period}</span>`;
+            cardElement.querySelector('.old-price').innerHTML = oldPrice ? `${oldPrice}${period}` : '&nbsp;';
+            cardElement.querySelector('.storage-info').innerHTML = `<strong>Хранилище:</strong> ${selectedTier.storage}`;
+          });
+        });
+      } 
+      
+      renderLicenseCards('bitrix24-licenses', false);
+      const priceToggle = document.getElementById('price-toggle');
+      priceToggle?.addEventListener('change', function () { renderLicenseCards('bitrix24-licenses', this.checked); });
+      const tabButtons = document.querySelectorAll('.license-tabs .tab-button');
+      const tabContents = document.querySelectorAll('.license-tab-content');
+      const tabSwitcher = document.getElementById('tab-switcher');
+
+      function switchTab(tabId) {
+        // Deactivate all
+        tabContents.forEach(content => content.classList.remove('active'));
+        tabButtons.forEach(button => button.classList.remove('active'));
+
+        // Activate selected
+        const selectedContent = document.getElementById(tabId);
+        const selectedButton = document.querySelector(`.tab-button[data-tab='${tabId}']`);
+
+        if (selectedContent) {
+          selectedContent.classList.add('active');
+          const container = selectedContent.querySelector('.license-cards-container');
+          if (container) {
+            // Temporarily disable scroll-snap to programmatically set scroll position
+            container.style.scrollSnapType = 'none';
+            container.scrollLeft = 0;
+            // Re-enable scroll-snap after a short delay
+            setTimeout(() => {
+              container.style.scrollSnapType = 'x mandatory';
+            }, 50);
+          }
+        }
+        if (selectedButton) {
+          selectedButton.classList.add('active');
+          selectedButton.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+        
+        // Sync dropdown
+        if (tabSwitcher.value !== tabId) {
+          tabSwitcher.value = tabId;
+        }
+
+        // Update arrows after tab switch
+        updateArrows();
+      }
+
+      tabButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+          switchTab(e.currentTarget.dataset.tab);
+        });
+      });
+
+      tabSwitcher.addEventListener('change', (event) => {
+        switchTab(event.target.value);
+      });
+      const wrapper = document.querySelector('.license-cards-container-wrapper');
+      const container = wrapper?.querySelector('.license-cards-container');
+      const prevBtn = wrapper?.querySelector('.scroll-arrow.prev');
+      const nextBtn = wrapper?.querySelector('.scroll-arrow.next');
+      const cardWidth = 320;
+      const gap = 24;
+
+      function updateArrows() {
+        if (!container || !prevBtn || !nextBtn) return;
+
+        if (window.innerWidth <= 768) {
+            prevBtn.style.display = 'none';
+            nextBtn.style.display = 'none';
+            return;
+        }
+
+        const isScrollable = container.scrollWidth > container.clientWidth;
+        
+        if (isScrollable) {
+          prevBtn.style.display = 'block';
+          nextBtn.style.display = 'block';
+          prevBtn.disabled = container.scrollLeft < 10;
+          nextBtn.disabled = container.scrollLeft + container.clientWidth >= container.scrollWidth - 10;
+        } else {
+          prevBtn.style.display = 'none';
+          nextBtn.style.display = 'none';
+        }
+      }
+
+      if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+          if (!container) return;
+          container.scrollLeft -= (cardWidth + gap);
+          setTimeout(updateArrows, 400);
+        });
+      }
+
+      if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+          if (!container) return;
+          container.scrollLeft += (cardWidth + gap);
+          setTimeout(updateArrows, 400);
+        });
+      }
+
+      if (container) {
+        updateArrows();
+        new ResizeObserver(updateArrows).observe(container);
+        container.addEventListener('scroll', updateArrows);
+      }
+
+      // Corporate Portal Price Logic
+      const corporateUsersDropdown = document.getElementById('corporate-users');
+      const corporatePriceDisplay = document.getElementById('corporate-price');
+
+      const corporatePrices = {
+        '50': '159 000 ₽',
+        '100': '229 000 ₽',
+        '250': '349 000 ₽',
+        '500': '599 000 ₽'
+      };
+
+      function updateCorporatePrice() {
+        if (corporateUsersDropdown && corporatePriceDisplay) {
+          const selectedUsers = corporateUsersDropdown.value;
+          corporatePriceDisplay.textContent = corporatePrices[selectedUsers];
+        }
+      } if (corporateUsersDropdown) {
+        corporateUsersDropdown.addEventListener('change', updateCorporatePrice);
+        // Set initial price on load
+        updateCorporatePrice();
+      }
+
+      // Set initial tab and scroll position
+      switchTab('bitrix24-licenses');
+    });
+
+
+    
+  </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const tabsContainer = document.querySelector('.license-tabs');
+        const prevBtn = document.getElementById('tab-scroll-prev');
+        const nextBtn = document.getElementById('tab-scroll-next');
+
+        const updateArrows = () => {
+          if (!tabsContainer) return;
+
+          const isScrollable = tabsContainer.scrollWidth > tabsContainer.clientWidth;
+          
+          if (isScrollable) {
+            prevBtn.style.display = tabsContainer.scrollLeft > 0 ? 'block' : 'none';
+            nextBtn.style.display = tabsContainer.scrollLeft < (tabsContainer.scrollWidth - tabsContainer.clientWidth - 1) ? 'block' : 'none';
+          } else {
+            prevBtn.style.display = 'none';
+            nextBtn.style.display = 'none';
+          }
+        };
+
+        const scrollTabs = (amount) => {
+          if (!tabsContainer) return;
+          tabsContainer.scrollBy({ left: amount, behavior: 'smooth' });
+        };
+
+        prevBtn.addEventListener('click', () => scrollTabs(-200));
+        nextBtn.addEventListener('click', () => scrollTabs(200));
+
+        tabsContainer.addEventListener('scroll', updateArrows);
+        window.addEventListener('resize', updateArrows);
+
+        // Initial check
+        updateArrows();
+      });
+    </script>
+
+<style>
+@media (max-width: 768px) {
+  .mobile-scroll-arrows {
+    display: block;
+  }
+
+  .mobile-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 20;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 23px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  .license-cards-container-wrapper {
+    position: relative;
+  }
+
+  .mobile-arrow.left {
+    left: 0;
+  }
+
+  .mobile-arrow.right {
+    right: 0;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-scroll-arrows {
+    display: none;
+  }
+}
+</style>
+<script>
+function scrollMobileCards(button, direction) {
+  const container = button.closest('.license-tab-content').querySelector('.license-cards-container');
+  const card = container.querySelector('.license-card');
+  const cardWidth = card.offsetWidth;
+  container.scrollBy({ left: direction * cardWidth, behavior: 'smooth' });
+}
+</script>
+
+<!-- Bitrix24 форма -->
+<script data-b24-form="click/6/30ks5n" data-skip-moving="true">
+(function(w,d,u){
+  var s=d.createElement('script');s.async=true;s.src=u+'?'+(Date.now()/180000|0);
+  var h=d.getElementsByTagName('script')[0];h.parentNode.insertBefore(s,h);
+})(window,document,'https://b24.turkmen-tranzit.com/upload/crm/form/loader_6_30ks5n.js');
+</script>
+
+<!-- Автоматически назначаем открытие формы на кнопки -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll('a.buy-button, a, button').forEach(btn => {
+      const text = btn.textContent.trim().toLowerCase();
+      if (['купить', 'связаться', 'создать'].includes(text)) {
+        btn.setAttribute('data-b24-form', 'click/6/30ks5n');
+        btn.setAttribute('href', 'javascript:void(0);');
+      }
+    });
+  });
+</script>
+
+</body>
+
+</html>
